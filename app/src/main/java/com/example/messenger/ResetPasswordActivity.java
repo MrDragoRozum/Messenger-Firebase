@@ -33,8 +33,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         viewModel.getError().observe(this, error ->
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show());
 
-        viewModel.getSentMessage().observe(this, message ->
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+        viewModel.isSuccess().observe(this, success -> {
+            if (success) {
+                Toast.makeText(this, R.string.reset_link_sent, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupClickListener() {

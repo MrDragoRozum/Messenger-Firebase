@@ -9,16 +9,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordViewModel extends ViewModel {
 
-    private final MutableLiveData<String> sentMessage = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> success = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
-    private final FirebaseAuth auth;
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
+    ;
 
-    public ResetPasswordViewModel() {
-        auth = FirebaseAuth.getInstance();
-    }
-
-    public LiveData<String> getSentMessage() {
-        return sentMessage;
+    public LiveData<Boolean> isSuccess() {
+        return success;
     }
 
     public LiveData<String> getError() {
@@ -27,8 +24,7 @@ public class ResetPasswordViewModel extends ViewModel {
 
     public void resetPassword(String email) {
         auth.sendPasswordResetEmail(email)
-                .addOnSuccessListener(unused -> sentMessage
-                        .setValue("The reset message has been sent!"))
+                .addOnSuccessListener(unused -> success.setValue(true))
                 .addOnFailureListener(e -> error.setValue(e.getMessage()));
     }
 }

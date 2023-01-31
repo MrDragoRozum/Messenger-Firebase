@@ -16,6 +16,11 @@ public class RegistrationViewModel extends ViewModel {
 
     public RegistrationViewModel() {
         auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener(userFB -> {
+            if (userFB.getCurrentUser() != null) {
+                user.setValue(userFB.getCurrentUser());
+            }
+        });
     }
 
     public LiveData<String> getError() {
@@ -26,9 +31,8 @@ public class RegistrationViewModel extends ViewModel {
         return user;
     }
 
-    public void Register(String email, String password, String name, String lastName, int age) {
+    public void register(String email, String password, String name, String lastName, int age) {
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> user.setValue(authResult.getUser()))
                 .addOnFailureListener(e -> error.setValue(e.getMessage()));
     }
 }

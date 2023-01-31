@@ -38,6 +38,7 @@ public class RegistrationActivity extends AppCompatActivity {
             if (user != null) {
                 Intent intent = UsersActivity.newIntent(RegistrationActivity.this);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -51,7 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
             String lastName = getTrimmedValue(editTextLastName);
             int age = Integer.parseInt(getTrimmedValue(editTextAge));
 
-            viewModel.Register(email, password,
+            viewModel.register(email, password,
                     name, lastName, age);
         });
     }
