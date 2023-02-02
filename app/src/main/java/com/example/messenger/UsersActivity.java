@@ -3,6 +3,7 @@ package com.example.messenger;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,16 +11,27 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 public class UsersActivity extends AppCompatActivity {
 
     private UserViewModel viewModel;
+    private RecyclerView recyclerViewUsers;
+    private UsersAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
+        initViews();
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
         observeViewModel();
+
+    }
+
+    private void initViews() {
+        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
+        adapter = new UsersAdapter();
+        recyclerViewUsers.setAdapter(adapter);
     }
 
     private void observeViewModel() {
