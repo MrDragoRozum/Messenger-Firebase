@@ -8,8 +8,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Random;
 
 
 public class UsersActivity extends AppCompatActivity {
@@ -17,6 +26,8 @@ public class UsersActivity extends AppCompatActivity {
     private UserViewModel viewModel;
     private RecyclerView recyclerViewUsers;
     private UsersAdapter adapter;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference reference = database.getReference("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +36,6 @@ public class UsersActivity extends AppCompatActivity {
         initViews();
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
         observeViewModel();
-
     }
 
     private void initViews() {
@@ -42,6 +52,7 @@ public class UsersActivity extends AppCompatActivity {
                 finish();
             }
         });
+        viewModel.getUsers().observe(this, users -> adapter.setUsers(users));
     }
 
     public static Intent newIntent(Context context) {

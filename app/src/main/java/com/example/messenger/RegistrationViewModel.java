@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationViewModel extends ViewModel {
 
@@ -13,6 +15,8 @@ public class RegistrationViewModel extends ViewModel {
     private final MutableLiveData<FirebaseUser> user = new MutableLiveData<>();
 
     private final FirebaseAuth auth;
+    private final FirebaseDatabase database;
+    private final DatabaseReference userReference;
 
     public RegistrationViewModel() {
         auth = FirebaseAuth.getInstance();
@@ -21,6 +25,8 @@ public class RegistrationViewModel extends ViewModel {
                 user.setValue(userFB.getCurrentUser());
             }
         });
+        database = FirebaseDatabase.getInstance();
+        userReference = database.getReference("Users");
     }
 
     public LiveData<String> getError() {
@@ -33,6 +39,21 @@ public class RegistrationViewModel extends ViewModel {
 
     public void register(String email, String password, String name, String lastName, int age) {
         auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser firebaseUser = authResult.getUser();
+                    if(firebaseUser == null) {
+                        return;
+                    }
+                    String uid = firebaseUser.getUid();
+                    User user = new User(
+                            uid,
+                            name,
+                            lastName,
+                            age,
+                            false
+                    );
+                    userReference.child(uid).setValue(user);
+                })
                 .addOnFailureListener(e -> error.setValue(e.getMessage()));
     }
 }
