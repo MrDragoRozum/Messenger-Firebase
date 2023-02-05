@@ -72,7 +72,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
         public UsersViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewUser = itemView.findViewById(R.id.textViewUser);
-            viewUserOnline = itemView.findViewById(R.id.viewUserOnline);
+            viewUserOnline = itemView.findViewById(R.id.viewStatus);
         }
     }
 }

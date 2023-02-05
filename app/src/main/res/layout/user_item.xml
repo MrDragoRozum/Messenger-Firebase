@@ -23,7 +23,7 @@
             tools:text="Вася Пупкин, 16" />
 
         <View
-            android:id="@+id/viewUserOnline"
+            android:id="@+id/viewStatus"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_margin="16dp"

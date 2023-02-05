@@ -16,4 +16,5 @@
     <string name="message">The reset message has been sent!</string>
     <string name="logout">Logout</string>
     <string name="reset_link_sent">The reset link has been successfully sent</string>
+    <string name="input_your_message">Input your message</string>
 </resources>
