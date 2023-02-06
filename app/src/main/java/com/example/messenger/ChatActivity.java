@@ -1,6 +1,7 @@
 package com.example.messenger;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public class ChatActivity extends AppCompatActivity {
     private static final String EXTRA_OTHER_USER_ID = "user_other_id";
     private String currentUserId;
     private String otherUserId;
+    private ChatViewModel viewModel;
+    private ChatViewModelFactory factory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +40,33 @@ public class ChatActivity extends AppCompatActivity {
         otherUserId = getIntent().getStringExtra(EXTRA_OTHER_USER_ID);
         adapter = new MessageAdapter(currentUserId);
         recyclerViewMessages.setAdapter(adapter);
-        List<Message> messageArrayList = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            Message message = new Message("Text " + i, otherUserId,  currentUserId);
-            messageArrayList.add(message);
-        }
-        for(int i = 0; i < 25; i++) {
-            Message message = new Message( "Купи гараж, надоел, за " + i*32 ,currentUserId, otherUserId);
-            messageArrayList.add(message);
-        }
-        adapter.setMessageList(messageArrayList);
+        factory = new ChatViewModelFactory(currentUserId, otherUserId);
+        viewModel = new ViewModelProvider(this, factory).get(ChatViewModel.class);
+        observeViewModel();
+        imageViewSendMessage.setOnClickListener(l -> {
+            String text = editTextMessage.getText().toString().trim();
+            Message message = new Message(text, currentUserId, otherUserId);
+            viewModel.sendMessage(message);
+        });
+    }
+
+    private void observeViewModel() {
+        viewModel.getError().observe(this, error ->
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show());
+
+        viewModel.getMessages().observe(this,messages ->
+                adapter.setMessageList(messages));
+
+        viewModel.getMessageSent().observe(this, isBoolean -> {
+            if(isBoolean) {
+                editTextMessage.setText("");
+            }
+        });
+
+        viewModel.getUserOther().observe(this, user -> {
+            String userInfo = String.format("%s %s", user.getName(), user.getLastName());
+            textViewTitle.setText(userInfo);
+        });
     }
 
     public static Intent newIntent(Context context, String currentUserId, String otherUserId) {
