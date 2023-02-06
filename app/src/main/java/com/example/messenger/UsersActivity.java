@@ -28,6 +28,8 @@ public class UsersActivity extends AppCompatActivity {
     private UsersAdapter adapter;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference reference = database.getReference("Users");
+    private static final String EXTRA_CURRENT_USER_ID = "user_id";
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,12 @@ public class UsersActivity extends AppCompatActivity {
         initViews();
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
         observeViewModel();
+        adapter.setOnUserClickListener(otherUserId -> {
+            currentUserId = getIntent().getStringExtra(EXTRA_CURRENT_USER_ID);
+            Intent intent = ChatActivity
+                    .newIntent(UsersActivity.this, currentUserId, otherUserId.getId());
+            startActivity(intent);
+        });
     }
 
     private void initViews() {
@@ -55,8 +63,10 @@ public class UsersActivity extends AppCompatActivity {
         viewModel.getUsers().observe(this, users -> adapter.setUsers(users));
     }
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, UsersActivity.class);
+    public static Intent newIntent(Context context, String currentUserId) {
+        Intent intent =  new Intent(context, UsersActivity.class);
+        intent.putExtra(EXTRA_CURRENT_USER_ID,currentUserId);
+        return intent;
     }
 
     @Override

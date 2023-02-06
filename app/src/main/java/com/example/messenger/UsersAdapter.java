@@ -23,6 +23,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
 
     public void setUsers(ArrayList<User> users) {
         this.users = users;
+        notifyDataSetChanged();
     }
 
     @NonNull

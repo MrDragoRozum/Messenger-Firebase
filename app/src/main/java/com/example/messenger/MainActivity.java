@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.getUser().observe(this, user -> {
             if (user != null) {
-                Intent intent = UsersActivity.newIntent(context);
+                Intent intent = UsersActivity.newIntent(context, user.getUid());
                 startActivity(intent);
                 finish();
             }

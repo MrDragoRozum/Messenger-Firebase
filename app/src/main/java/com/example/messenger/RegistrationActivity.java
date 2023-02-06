@@ -36,7 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         viewModel.getUser().observe(this, user -> {
             if (user != null) {
-                Intent intent = UsersActivity.newIntent(RegistrationActivity.this);
+                Intent intent = UsersActivity.newIntent(RegistrationActivity.this, user.getUid());
                 startActivity(intent);
                 finish();
             }
