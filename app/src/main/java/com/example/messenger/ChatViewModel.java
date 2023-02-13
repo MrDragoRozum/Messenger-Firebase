@@ -42,7 +42,7 @@ public class ChatViewModel extends ViewModel {
 
             }
         });
-        referenceMessages.child(currentUserId).child(otherUserId)
+        referenceMessages.child(otherUserId).child(currentUserId)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -75,6 +75,10 @@ public class ChatViewModel extends ViewModel {
 
     public LiveData<User> getUserOther() {
         return userOther;
+    }
+
+    public void onlineUserStatus(boolean isOnline) {
+        referenceUsers.child(currentUserId).child("online").setValue(isOnline);
     }
 
     public void sendMessage(Message message) {

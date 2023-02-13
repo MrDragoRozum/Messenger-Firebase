@@ -1,11 +1,13 @@
 package com.example.messenger;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -54,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
         viewModel.getError().observe(this, error ->
                 Toast.makeText(this, error, Toast.LENGTH_SHORT).show());
 
-        viewModel.getMessages().observe(this,messages ->
+        viewModel.getMessages().observe(this, messages ->
                 adapter.setMessageList(messages));
 
         viewModel.getMessageSent().observe(this, isBoolean -> {
@@ -66,6 +68,15 @@ public class ChatActivity extends AppCompatActivity {
         viewModel.getUserOther().observe(this, user -> {
             String userInfo = String.format("%s %s", user.getName(), user.getLastName());
             textViewTitle.setText(userInfo);
+
+            int backgroundId;
+            if(user.isOnline()) {
+                backgroundId = R.drawable.circle_green;
+            } else {
+                backgroundId = R.drawable.circle_red;
+            }
+            Drawable background = ContextCompat.getDrawable(ChatActivity.this,backgroundId);
+            viewStatus.setBackground(background);
         });
     }
 

@@ -82,4 +82,16 @@ public class UsersActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.onlineUserStatus(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.onlineUserStatus(false);
+    }
 }
