@@ -19,22 +19,23 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         observeViewModel()
-
+        setupClickListener()
     }
 
-    private fun setupClickListeners() {
+    private fun setupClickListener() {
         with(binding) {
             buttonLogin.setOnClickListener {
-                val email = getTrimmedValue(editTextEmail)
-                val password = getTrimmedValue(editTextPassword)
+                val email = editTextEmail.getTrimmedValue()
+                val password = editTextPassword.getTrimmedValue()
                 viewModel.login(email, password)
             }
             textViewRegister.setOnClickListener {
 
             }
             textViewForgotPassword.setOnClickListener {
-                val email = getTrimmedValue(editTextEmail)
-
+                val email = editTextEmail.getTrimmedValue()
+                val intent = ResetPasswordActivity.newIntent(this@MainActivity, email)
+                startActivity(intent)
             }
         }
     }
@@ -56,5 +57,5 @@ class MainActivity : AppCompatActivity() {
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 
-    private fun getTrimmedValue(editText: EditText) = editText.text.toString().trim()
+    private fun EditText.getTrimmedValue() = this.text.toString().trim()
 }
