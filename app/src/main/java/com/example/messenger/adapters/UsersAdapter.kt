@@ -1,4 +1,4 @@
-package com.example.messenger.adapter
+package com.example.messenger.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

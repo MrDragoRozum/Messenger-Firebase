@@ -7,7 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.messenger.adapter.UsersAdapter
+import com.example.messenger.adapters.UsersAdapter
 import com.example.messenger.databinding.ActivityUsersBinding
 
 class UsersActivity : AppCompatActivity() {

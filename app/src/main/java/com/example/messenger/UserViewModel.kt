@@ -28,12 +28,10 @@ class UserViewModel : ViewModel() {
                 val userList = mutableListOf<User>()
                 for (item in snapshot.children) {
                     val user = item.getValue(User::class.java) ?: return
-                    if(currentUser.uid != user.id)
-                    userList.add(user)
+                    if(currentUser.uid != user.id) userList.add(user)
                 }
                 users.value = userList
             }
-
             override fun onCancelled(error: DatabaseError) {}
         })
     }
