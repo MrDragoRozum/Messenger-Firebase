@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+
 class UserViewModel : ViewModel() {
     private val user = MutableLiveData<FirebaseUser>()
     private val users = MutableLiveData<List<User>>()
@@ -23,17 +24,17 @@ class UserViewModel : ViewModel() {
         auth.addAuthStateListener { user.value = it.currentUser }
         userReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val currentUser = auth.currentUser ?: return
                 val userList = mutableListOf<User>()
-                if (auth.currentUser != null) return
-
-                for (item in snapshot.children)
-                    userList.add(item.getValue(User::class.java) ?: return)
+                for (item in snapshot.children) {
+                    val user = item.getValue(User::class.java) ?: return
+                    if(currentUser.uid != user.id)
+                    userList.add(user)
+                }
                 users.value = userList
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 

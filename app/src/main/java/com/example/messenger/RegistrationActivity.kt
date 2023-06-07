@@ -29,7 +29,9 @@ class RegistrationActivity : AppCompatActivity() {
         }
         viewModel.getUser.observe(this) {
             it?.let {
-
+                val intent = UsersActivity.newIntent(this, it.uid)
+                startActivity(intent)
+                finish()
             }
         }
     }

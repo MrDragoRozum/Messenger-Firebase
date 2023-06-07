@@ -48,7 +48,9 @@ class MainActivity : AppCompatActivity() {
             }
             getUser.observe(this@MainActivity) {
                 it?.let {
-
+                    val intent = UsersActivity.newIntent(this@MainActivity, it.uid)
+                    startActivity(intent)
+                    finish()
                 }
             }
         }
