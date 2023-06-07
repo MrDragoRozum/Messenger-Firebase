@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.login(email, password)
             }
             textViewRegister.setOnClickListener {
-
+                val intent = RegistrationActivity.newIntent(this@MainActivity)
+                startActivity(intent)
             }
             textViewForgotPassword.setOnClickListener {
                 val email = editTextEmail.getTrimmedValue()
