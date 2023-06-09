@@ -39,7 +39,10 @@ class UsersActivity : AppCompatActivity() {
 
     private fun listenerAdapter() {
         adapter.onUserClickListener = UsersAdapter.OnUserClickListener {
-
+            val currentUserId =
+                intent.getStringExtra(EXTRA_CURRENT_USER_ID) ?: return@OnUserClickListener
+            val intent = ChatActivity.newIntent(this, currentUserId, it.id)
+            startActivity(intent)
         }
     }
 
@@ -58,8 +61,8 @@ class UsersActivity : AppCompatActivity() {
         viewModel.onlineUserStatus(true)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         viewModel.onlineUserStatus(false)
     }
 

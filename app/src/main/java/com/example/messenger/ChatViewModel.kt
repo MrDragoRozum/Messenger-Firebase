@@ -1,5 +1,6 @@
 package com.example.messenger
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,30 +23,32 @@ class ChatViewModel(private val currentUserId: String, private val otherUserId: 
     private val referenceMessages = database.getReference("Messages")
 
     init {
-        referenceUsers.child(otherUserId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                userOther.value = snapshot.getValue(User::class.java)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-
-        referenceMessages.child(otherUserId).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val messageList = mutableListOf<Message>()
-                for (item in snapshot.children) {
-                    val message = item.getValue(Message::class.java) ?: return
-                    messageList.add(message)
+        referenceUsers.child(otherUserId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    userOther.value = snapshot.getValue(User::class.java)
                 }
-                messages.value = messageList
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        referenceMessages.child(otherUserId).child(currentUserId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val messageList = mutableListOf<Message>()
+                    for (item in snapshot.children) {
+                        val message = item.getValue(Message::class.java) ?: return
+                        messageList.add(message)
+                    }
+                    messages.value = messageList
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     fun onlineUserStatus(isOnline: Boolean) {
@@ -70,7 +73,9 @@ class ChatViewModel(private val currentUserId: String, private val otherUserId: 
                         .child(senderId)
                         .push()
                         .setValue(this)
-                }
+                        .addOnSuccessListener { messageSent.value = true }
+                        .addOnFailureListener { error.value = it.message }
+                }.addOnFailureListener { error.value = it.message }
         }
     }
 }

@@ -40,8 +40,8 @@ class UserViewModel : ViewModel() {
     val getUsers: LiveData<List<User>> get() = users
 
     fun logout() {
-        auth.signOut()
         onlineUserStatus(false)
+        auth.signOut()
     }
 
     fun onlineUserStatus(isOnline: Boolean) {
