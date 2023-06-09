@@ -10,7 +10,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class ChatViewModel(val currentUserId: String, val otherUserId: String) : ViewModel() {
+class ChatViewModel(private val currentUserId: String, private val otherUserId: String) :
+    ViewModel() {
     private val error = MutableLiveData<String>()
     private val messageSent = MutableLiveData<Boolean>()
     private val messages = MutableLiveData<List<Message>>()
